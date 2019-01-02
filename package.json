@@ -1,0 +1,20 @@
+{
+  "name": "nodeapp",
+  "version": "1.0.0",
+  "description": "App with node js",
+  "scripts": {
+    "start": "node app.js",
+    "start-watch": "nodemon app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.0",
+    "express": "^4.16.4",
+    "mongodb": "^3.1.0",
+
+    "swagger-jsdoc": "^3.2.6",
+    "swagger-ui-express": "^4.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  }
+}
