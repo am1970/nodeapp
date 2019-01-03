@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "App with node js",
   "scripts": {
-    "start": "node app.js",
-    "start-watch": "nodemon app.js"
+    "start": "MONGO_SERVER=localhost:27017 DATABASE=nodeapp PORT=3000 node app.js",
+    "start-watch": "PORT=3000 nodemon app.js"
   },
   "dependencies": {
     "body-parser": "^1.18.0",

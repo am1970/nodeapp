@@ -1,21 +1,32 @@
 const express = require("express");
-let postRoute = require('./src/routes/post');
-let swaggerDoc = require('./src/swaggerDoc');
+let postRoutes = require('./routes/post');
+let userRoutes = require('./routes/user');
+let swaggerDoc = require('./swaggerDoc');
 let bodyParser = require('body-parser');
-
+let mongoose = require('mongoose');
+let databaseConf = require('./config/database');
 const app = express();
 
+const MONGO_SERVER = databaseConf.mongo_serve;
+const DATABASE = databaseConf.database;
+const PORT = databaseConf.port;
+
+//Middleware
 app.use(bodyParser.urlencoded({extended: true}));
-app.use((err, req, res, next) => {
-    if(err) {
-        console.log('There was an error', err)
-    } else {
-        console.log(`URL: ${req.originalUrl} \n BODY: ${req.body}`)
-    }
+app.use((req, res, next) => {
+    console.log(`URL: ${req.originalUrl} BODY: ${req.body}`);
+    next();
 });
-app.use(postRoute);
+
+//Import routes
+app.use('/', userRoutes);
+app.use('/posts', postRoutes);
 app.use(swaggerDoc);
 
-const PORT = process.env.PORT || 3000;
+//Set connection for db
+mongoose.connect(`mongodb://${MONGO_SERVER}/${DATABASE}`, { useNewUrlParser: true });
+mongoose.Promise = global.Promise;
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.listen(PORT, () => console.log(`Server has started on ${PORT}`));
