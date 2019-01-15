@@ -24,7 +24,6 @@ router.get('/:id', PostController.get);
  *          description: Save a post to db
  */
 router.post('/', PostController.create);
-
 /**
  * @swagger
  * /posts/:id:

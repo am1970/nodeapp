@@ -4,26 +4,10 @@ let router = express.Router();
 
 /**
  * @swagger
- * /register:
- *      post:
- *          description: Get all posts
+ * /user:
+ *      get:
+ *          description: Get user by access token
  */
-router.post('/register', UserController.register);
-
-/**
- * @swagger
- * /login:
- *      post:
- *          description: Get all posts
- */
-router.post('/login', UserController.login);
-
-/**
- * @swagger
- * /logout:
- *      post:
- *          description: Get all posts
- */
-router.post('/logout', UserController.logout);
+router.get('/', UserController.get);
 
 module.exports = router;

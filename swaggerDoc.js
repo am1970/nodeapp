@@ -12,7 +12,7 @@ let options = {
         },
         basePath: 'posts',
     },
-    apis: ['./routes/post.js', './routes/user.js'],
+    apis: ['./routes/post.js', './routes/auth.js'],
 };
 
 let specs = swaggerJsDoc(options);

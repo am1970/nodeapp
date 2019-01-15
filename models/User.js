@@ -1,9 +1,13 @@
 let mongoose = require('mongoose');
 
 let UserSchema = new mongoose.Schema({
-    username: {
+    first_name: {
         type: String,
-        required: true,
+        required: false,
+    },
+    last_name: {
+        type: String,
+        required: false,
     },
     email: {
         type: String,

@@ -1,13 +1,25 @@
-const User = require('../models/User');
+let passport = require('passport');
 
-exports.register = (req, res) => {
-   return res.send('This route for register user');
-};
+exports.get = (req, res, next) => {
+    passport.authenticate('jwt', (err, user, info) => {
+        if(err) {
+            console.log(err);
+        }
 
-exports.login = (req, res) => {
-    return res.send('This route for login user');
-};
+        if(info !== undefined) {
+            console.log(info.message);
+            res.send(info.message);
+        } else {
+            console.log('user found in db from route');
+            res.status(200).send({
+                auth: true,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
+                message: 'user found in db'
+            });
+        }
 
-exports.logout = (req, res) => {
-    return res.send('This route for logout user');
+
+    })(req, res, next);
 };

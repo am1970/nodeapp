@@ -1,6 +1,26 @@
 let mongoose = require('mongoose');
 
+let CommentSchema = new mongoose.Schema({
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+    },
+    text: {
+        type: String,
+        required: true,
+    },
+    date: {
+        type: Date,
+        required: true,
+        default: Date.now
+    }
+});
+
 let PostSchema = new mongoose.Schema({
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+    },
     title: {
         type: String,
         required: true,
@@ -8,6 +28,14 @@ let PostSchema = new mongoose.Schema({
     text: {
         type: String,
         required: true
+    },
+    comments: [
+        CommentSchema
+    ],
+    date: {
+        type: Date,
+        required: true,
+        default: Date.now
     }
 });
 

@@ -1,4 +1,5 @@
-const Post = require('../models/Post');
+let Post = require('../models/Post');
+let passport = require('passport');
 
 exports.getAll = (req, res) => {
     Post.find({})
@@ -25,49 +26,94 @@ exports.get = (req, res) => {
         });
 };
 
-exports.create = (req, res) => {
-    if(!req.body) {
-        return res.status(400).send('Request body is missing');
-    }
+exports.create = (req, res, next) => {
+    passport.authenticate('jwt', (err, user, info) => {
+        console.log(user);
+        if(!req.body) {
+            return res.status(400).send('Request body is missing');
+        }
 
-    let model = new Post(req.body);
+        if(err) {
+            console.log(err);
+        }
 
-    model.save()
-        .then(doc => {
-            if(!doc || doc.length === 0) {
-                return res.status(500).send(doc);
+        if(info !== undefined) {
+            console.log(info.message);
+            res.send(info.message);
+        } else {
+            let post = new Post(req.body);
+            post.user_id = user._id;
+            post.save()
+                .then(post => {
+                    if (!post || post.length === 0) {
+                        return res.status(500).send(post);
+                    }
+                    res.status(201).send(post);
+                })
+                .catch(err => {
+                    res.status(500).json(err);
+                });
+        }
+    })(req, res, next);
+};
+
+exports.update = (req, res, next) => {
+    passport.authenticate('jwt', (err, user, info) => {
+        console.log(user, 'update');
+        if(!req.body) {
+            return res.status(400).send('Request body is missing');
+        }
+
+        if(err) {
+            console.log(err);
+        }
+
+        if(info !== undefined) {
+            console.log(info.message);
+            res.send(info.message);
+        } else {
+            if (!req.params.id) {
+                return res.status(400).send('Missing URL parameter: id');
             }
-            res.status(201).send(doc);
-        })
-        .catch(err => {
-            res.status(500).json(err);
-        });
+
+            Post.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
+                .then(doc => {
+                    res.json(doc);
+                })
+                .catch(err => {
+                    res.status(500).json(err);
+                });
+        }
+    })(req, res, next);
 };
 
-exports.update = (req, res) => {
-    if(!req.params.id) {
-        return res.status(400).send('Missing URL parameter: id');
-    }
+exports.delete = (req, res, next) => {
+    passport.authenticate('jwt', (err, user, info) => {
+        console.log(user);
+        if(!req.body) {
+            return res.status(400).send('Request body is missing');
+        }
 
-    Post.findOneAndUpdate({ _id: req.params.id}, req.body, {new: true})
-        .then(doc => {
-            res.json(doc);
-        })
-        .catch(err => {
-            res.status(500).json(err);
-        });
-};
+        if(err) {
+            console.log(err);
+        }
 
-exports.delete = (req, res) => {
-    if(!req.params.id) {
-        return res.status(400).send('Missing URL parameter: id');
-    }
+        if(info !== undefined) {
+            console.log(info.message);
+            res.send(info.message);
+        } else {
 
-    Post.findOneAndRemove({ _id: req.params.id})
-        .then(doc => {
-            res.json(doc);
-        })
-        .catch(err => {
-            res.status(500).json(err);
-        });
+            if (!req.params.id) {
+                return res.status(400).send('Missing URL parameter: id');
+            }
+
+            Post.findOneAndRemove({_id: req.params.id})
+                .then(doc => {
+                    res.json(doc);
+                })
+                .catch(err => {
+                    res.status(500).json(err);
+                });
+        }
+    })(req, res, next);
 };
